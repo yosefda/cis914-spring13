@@ -1,0 +1,330 @@
+Wholemeal programming - think big e.g. work with an entire list, rather than a sequence of elements; develop a solution space, rather than an individual solution; image a graph, rather than a single path.
+
+Projective programming - first solve a more general problem, then extract the interesting bits and pieces by transforming the general program into more specialised ones.
+
+
+Declarations and variables
+--------------------------
+
+x :: Int, means “x has type Int”.
+x = 3, means “x defined to be 4” and doesn’t denote “assignment”.
+
+Haskell uses camelCase for identifier names.
+
+
+Arithmetic
+----------
+
+'backticks' make a function name into an infix operator e.g. ex1 = 19 `mod` 3.
+Negative numbers must be surrounded by parentheses, to avoid having the negation sign parsed as subtraction.
+
+Addition is only between values of the same numeric type, and Haskell doesn't do implicit conversion. They must be explicitly converted using:
+- fromIntegral: converts from Int or Integer to any other numeric type.
+- round, floor, ceiling: convert floating-point numbers to Int or Integer.
+
+There are 2 kind of division '/' for floating-point only and 'div' for integer only.
+
+
+Boolean logic
+-------------
+
+Logical operators:
+- and (&&)
+- or (||)
+- negation (not)
+
+Equality operators:
+- equality (==)
+- inequality (/=)
+
+Order comparison operators: <, >, <= and >=.
+
+if expression, return value and else part is required e.g.
+status = True
+result = if status then "Yes" else "No" -- result is True
+
+
+Functions
+---------
+
+Function signature: <function_name> :: <input_type> -> <output_type> e.g. sumtorial :: Integer -> Integer, which is a function that takes an Integer as input and 
+yields another Integer as output.
+
+Function names can't begin with capital letters.
+
+Functions can be defined by cases e.g.
+sumtorial :: Integer -> Integer
+sumtorial 0 = 0
+sumtorial n = n + sumtorial (n-1)
+Each clause is checked in order from top to bottom, and the first matching clause is chosen. For example sumtorial 0 evaluates to 0, since the first clause is matched. 
+sumtorial 3, matches the second clause since a variable n matches anything and it evaluates to 3 + sumtorial(3-1) (which then can be evaluated futher).
+
+Choices can also be made using guards e.g.
+hailstone :: Integer -> Integer
+hailstone n
+  | n `mod` 2 == 0 = n `div` 2
+  | otherwise      = 3*n + 1
+Any number of guards can be associated with each clause of a function definition, each of which is a Boolean expression. If the clause's patterns match, the guards are evaluated 
+in order from top to bottom, and the first one which evaluates to True is chosen. If none of the guards evaluate to True, matching continues with the next clause. 
+otherwise keyword is the default matching, if none of the guards evaluates to True.
+
+Function with multiple arguments e.g. 
+f :: Int -> Int -> Int -> Int
+f x y z = x + y + z 
+
+Function application has higher precedence than any infix operators e.g. succ 9 * 10 returns 91.
+
+Function name can contain ' (apostrophe). It is used at the end of function name to denote either a strict version of a dunction (i.e. one that isn't lazy), or a slightly modified version
+of a function or variable with similar name, e.g.
+
+doubleMe x = x + x
+doubleMe' x = x + x + 1
+
+If a function is composed of only special characters, it's considered an infix function by default. If we want to examine its type, pass it to another function, or call it as prefix function, we need to surround it in parentheses, e.g.
+ghci > :t (==)
+(==) :: Eq a => a -> a -> Bool
+
+Everything before "=>" like above is called class constraint.
+
+
+Pairs
+-----
+
+To pair things together e.g.
+p :: (Int, Char)
+p = (3, 'x')
+
+Elements of a pair can be extracted with pattern matching e.g.
+sumPair :: (Int, Int) -> Int
+sumPair (x, y) = x + y
+
+
+Lists
+-----
+
+Lists are homogeneous data structures which store several elements of the same type.
+
+Lists are surrounded by square brackets, and the values are separated by commas.
+
+Empty list is the simplest possible of list e.g. emptyList = []. Other lists are built up from the empty list using cons operator, (:). Cons takes an element and a list, and 
+produces a new list with the element prepended to the front e.g. myList = 1 : []. Notation [1,2,3] is just convenient shorthand for 1 : 2 : 3 : [].
+
+Strings are list of characters and all standard library functions for processing lists can also be used to process Strings.
+
+Pattern matching can be used to write functions that operate on lists e.g.
+intListLength :: [Integer] -> Integer
+intListLength [] = 0
+intListLength (_:xs) = 1 + intListLength xs 
+
+Lists can contain lists as elements, and lists can contain lists that contain lists, and so on. Lists within a list can be of different lengths, but can't be of different types (thus it's called "homogeneous"), e.g. 
+[[1,2,3],[1,1],[]]
+
+
+
+
+List operations
+---------------
+
+Two lists can be concatenated using "++" operator, e.g. 
+myList = [1,2,3] ++ [4,5]
+-- myList contains [1,2,3,4,5]
+
+But ++ operator is not efficient for long list, because it has to walk through the entire first list.
+
+Cons operator ":" adds new element to the beginning of a list in a constant operation, e.g.
+myNumbers = 13 : [1,2,3]
+-- myNumbers contains [13,1,2,3]
+
+To get element of a list by index use "!!" operator e.g. [1,2,3] !! 0, which returns 1.
+
+List can be compared if the items they contain can be compared. The items are compared in lexicographical order. Nonempty list is always considered to be greater than an empty one.
+[] < [1] -- True
+[1,2,3] < [1,2,4] -- True
+
+"head" takes a list and returns its first element (head) e.g. head [1,2,3] is 1, but head [] will throw exception.
+
+"tail" takes a list and returns it tails (it chops off a list's head) e.g. tail [1,2,3] is [2,3].
+
+"last" returns a list's last element e.g. last [1,2,3] is 3.
+
+"init" takes a list and returns everything except its last element e.g. init [1,2,3,4] is [1,2,3].
+
+"length" takes a list and returns its length e.g. length [1,2,3] is 3.
+
+"null" checks if a list is empty. If it is, it returns True, otherwise it returns False, e.g. null [] is True, null [1,2,3] is False.
+
+"reverse" reverses a list e.g. reverse [1,2,3] is [3,2,1].
+
+"take" takes a number and a list. It extracts the specified number elements from the beginning of the list, e.g. take 3 [1,2,3,4,5] is [1,2,3], take 3 [1,2] is [1,2], take 0 [1,2,3] is [].
+
+"drop" drops the specified number of elements from the beginning of a list, e.g. drop 2 [1,2,3] is [3], drop 4 [1,2,3] is [], drop 0 [1,2,3] is [1,2,3].
+
+"maximum/minimum" takes a list of items that can be put in some kind of order and returns the largest/smallest element, e.g. maximum [1,11,2] is 11, minimum [11,13,0] is 0.
+
+"sum" takes a list of numbers and returns their sum, e.g. sum [1,2,3] is 6.
+
+"product" takes a list of numbers and returns their product, e.g. product [1,2,3] is 6.
+
+"elem" takes an item and list items and tells us if that item is an element of the list, e.g. 4 `elem` [1,2,3,4] is True, 4 `elem` [1,2,3].
+
+Ranges are used to make lists composed of elements that can be enumerated, e.g. [1..20] is a list that contains elements from 1 to 20. We can also specify a step between items in the range, e.g. [2,4..11] is [2,4,6,8,10]. Ranges can also be used to create a decreasing list e.g. [9,6..1] is [9,6,3]. We can also use it to create a infinite list by not specifying an upper limit, e.g. [13,26..24*13] which creates a list containing the first 24 multiplies of 13. Because Haskell is lazy, we can do similar thing this way take 13 [13,26..].
+
+"cycle" takes a list and replicates its elements indefinitely to form an inifinite list. If you try to display the result, it will go on forever, so make sure to slice it off somewhere, e.g. take 7(cycle [1,2,3]) is [1,2,3,1,2,3,1].
+
+"repeat" takes an eleent and produces an infinite list of just that element, e.g. take 5 (repeat 2) is [2,2,2,2,2].
+
+"replicate" takes the length of the list and the item to replicate, e.g. replicate 3 7 is [7,7,7].
+
+"zip" produces a list of pairs e.g. zip [1,2,3] ['a', 'b', 'c'] is [(1,'a'),(2,'b'),(3,'c')].
+
+
+List comprehension
+------------------
+
+A way to filter, transform and combine lists.
+
+[<output> | <binding>, <predicate>] e.g. [x*2 | x <- [1..5], x*2 < 8] is [2,4,6].
+
+E.g. a comprehension that replaces every odd number greater than 10 with "BANG!". and every odd number less than 10 with "BOOM!":
+boomBangs xs = [if x < 10 then "BOOM!" else "BANG!" | x <-xs, odd x]
+boomBangs [7..13] is ["BOOM!","BOOM!","BANG!","BANG!"]
+
+Not only we can have multiple predicates in list comprehensions, we can also draw values from several lists. When drawing values from several lists, every combination of elements from these lists is reflected in the resulting list, e.g.
+nouns = ["hobo", "frog"]
+adjectives = ["lazy", "grouchy"]
+[adjective ++ " " ++ noun | adjective <- adjectives, noun <- nouns]
+-- resulting in ["lazy hobo","lazy frog","grouchy hobo","grouchy frog"]
+
+List comprehension can also be used on lists that contain lists, e.g.
+nestedList = [[1,2,3],[4,5,6],[7,8,9]]
+[[x  | x <-xs, odd x ]| xs <- xxs] resulting in [[1,3],[5],[7,9]].
+
+
+Tuples
+------
+
+Store several heterogeneous elements as a single value, e.g. (3, 'a', "hello").
+
+Tuples are of a fixed size and the type of a tuple is determined by the data type inside and the length, e.g. (1,2) is different from ("one", 2).
+
+Pairs are tuples that consist of 2 elements. "fst" returns first component of a tuple e.g. fst (1,2) is 1. "snd" returns second component of a tuple e.g. snd (1,2) is 2.  q
+
+
+
+
+
+
+
+GHCI
+----
+
+Set prompt :set prompt "ghci> ".
+
+":t <expression>" to examine the type of some expression, e.g. :t "Hello" is "hello" :: [Char], :t 4 == 5 is 4 == 5 :: Bool.
+
+
+
+
+If expression
+-------------
+
+In Haskell "if" is an expresion that must return a value, and not a statement. Thus the "else" part in mandatory.
+
+if <condition> then <return value when condition is true> else <return value when condition is false>.
+
+
+Types
+-----
+
+Explicit types are always denoted with the first letter in uppercase.
+
+Functions also have types which are defined by their parameters and return type. "->" separates parameters from the return type, e.g. addThreeNumbers :: Int -> Int -> Int -> Int, which indicates that addThreeNumbers has 3 parameters of type Int and returns an Int.
+
+x :: Int, machine-size integers. 2^29 (32-bit machine) or 2^63 (64-bit machine). The smallest one is defined by minBound, and the biggest one is defined by maxBound.
+
+x :: Integer, arbitrary-precision integers. It’s limited only by the amount of memory on your machine.
+
+x :: Float, single-precision floating point.
+x :: Double, double-precision floating point.
+
+x :: Boolean, boolean True and False.
+
+x :: Char, unicode characters and denotes by single quotes.
+
+x :: String, string or list of characters and denotes by double quotes.
+
+Tupes are also types which definition depends on their length and types of their components.
+
+
+Type variables
+--------------
+
+Type variables allow functions to operate on values of various types in a type-safe manner. 
+
+This is a lot like generics in other programming languages. Functions that use type variables are called polymorphic functions. 
+
+Names for type variable are usually lowercase one alphabet character, e.g. fst :: (a, b) -> a. Even though in the example a and b are different type variables, they dont necessarily need to be different type.
+
+
+Type classes
+------------
+
+Type class is an interface that specifies a bunch of functions, and when we decide to make a type an instance of a type class, we define what those functions mean for that type.
+
+"Eq":
+- for types that support equality testing
+- functions to be implemented: == and /=
+- all standard Haskell types (except for input/output types and functions) are instances of Eq
+
+"Ord"
+- for types whose values can be put in some order
+- functions to be implemented: >, <, >=, <=, compare (which takes two values whose types is an Ord instance and returns Ordering e.g. 5 `compare` 3 is GT)
+- all standard Haskell types (except and functions) are instances of Ord
+
+"Show":
+- for types that can be represented as strings
+- all standard Haskell types (except and functions) are instances of Show
+- functions to be implemented: show
+
+"Read":
+- the opposite of type class of Show
+- all standard Haskell types (except and functions) are instances Read
+- functions to be implemented: read (which takes a string and returns a value whouse type is an instane of Read, e.g. read "True" | False is True
+- read can infer the instance of Read type on how the value will be used, e.g. read "True" || False will return True (Bool), [read "True", False] will return [Bool]. But read "True" raises exception because GHCI doesn't know which instance of Read class we want, to fix that we need to add type annotation, e.g. read "True" :: Bool.
+- interesting gotcha with read "hello" :: String which raises exception because "hello" is not the string representation of a String, it has to be read "\"Hello\"" the reason is that show "hello" returns "\"hello\"" [http://stackoverflow.com/questions/27947925/haskell-prelude-read-no-parse-string]
+
+"Enum":
+- sequentially ordered types 
+- their values can be enumerated therefore can be used in list ranges
+- have defined successor (succ) and predecessors (pred)
+- examples of instances: (), Bool, Char, Ordering, Int, Integer, Float and Double
+
+"Bounded":
+- the instances have an upper bound and a lower bound, which can be checked by using the minBound and maxBound functions
+- minBound and maxBound are polymorphic constants due to its type minBound :: Bounded a => a
+- tuples whose components are all instances of Bounded are also considered to be instances of Bounded
+
+"Num":
+- a numeric type class
+- its instances can act like numbers
+- it appears that whole numbers are also polymorphic constants, they can act like any type that's an instance of Num type class, e.g. 20 :: Int is 20, 20 :: Double is 20.0
+- to be an instance of Num, a type must already be in Show and Eq
+- gotcha: (5 :: Int) * (6 :: Integer), both are instance of Num and (*) has type of (*) :: Num a => a -> a -> a, but the expression  will raise exception due to different type. On the other hand 5 * (6 :: Integer) is ok because 5 can act as Int or Integer, but in this case acts as Integer because the next operand is an Integer
+
+"Floating":
+- includes the Float and Double types, which are used to store floating-point numbers
+- functions that take and return values that are intances of the Floating type class need their results to be represented with floating-point numbers in order to do meaningful computations
+
+"Integral":
+- includes only integral (whole) numbers i.e. Int and Integer types
+- fromIntegral :: (Integral a, Num b) => a -> b, takes an integral number and turns it into a more general number, e.g. fromIntegral (length [1,2]) + 3.2 is 5.2
+
+Because a type class defines an abstract interface, one type can be an instance of many type classes e.g. Char is an instance of Eq and Or. On the other hand one type class can have many types as instances, e.g. Eq has instances: Int, Integer, Float, Char, etc.
+
+Sometimes a type must first be an instance of one type class to be allowed to become an instance of another. For example, to be an instance of Ord, a type must be first and instance of Eq, because if you can compare two things for ordering you should also be able to tell if those things are equal.
+
+ 
+
+
+
+

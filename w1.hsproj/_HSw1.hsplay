@@ -1,0 +1,10 @@
+-- Haskell Playground 1.0
+myList
+myNumbers
+myNumbers !! 1
+mySuperList
+
+[] < [1]
+[1,2,3] < [1,2,4]
+
+
