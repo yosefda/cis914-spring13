@@ -16,13 +16,18 @@ Arithmetic
 ----------
 
 'backticks' make a function name into an infix operator e.g. ex1 = 19 `mod` 3.
-Negative numbers must be surrounded by parentheses, to avoid having the negation sign parsed as subtraction.
+
+Negative numbers must be surrounded by parentheses, to avoid having the negation sign parsed as subtraction. This is a reasoned trade-off, because Haskell let us define new operators at any time.
 
 Addition is only between values of the same numeric type, and Haskell doesn't do implicit conversion. They must be explicitly converted using:
 - fromIntegral: converts from Int or Integer to any other numeric type.
 - round, floor, ceiling: convert floating-point numbers to Int or Integer.
 
 There are 2 kind of division '/' for floating-point only and 'div' for integer only.
+
+Haskell assigns numeric precedence values to operators, with 1 being the lowest precedence and 9 the highest. A higher-precedence operator is applied before a lower-precedence operator. We can use ghci to inspect the precedence levels of individual operators, using its :info command.
+
+In addition to precedence level, :info command also shows the fixity rules of the operator which can be either infixl (left associative) or infixr (right associative). The combination of precedence and associativity rules are usually referred as fixity rules.
 
 
 Boolean logic
@@ -167,7 +172,7 @@ List can be compared if the items they contain can be compared. The items are co
 
 "elem" takes an item and list items and tells us if that item is an element of the list, e.g. 4 `elem` [1,2,3,4] is True, 4 `elem` [1,2,3].
 
-Ranges are used to make lists composed of elements that can be enumerated, e.g. [1..20] is a list that contains elements from 1 to 20. We can also specify a step between items in the range, e.g. [2,4..11] is [2,4,6,8,10]. Ranges can also be used to create a decreasing list e.g. [9,6..1] is [9,6,3]. We can also use it to create a infinite list by not specifying an upper limit, e.g. [13,26..24*13] which creates a list containing the first 24 multiplies of 13. Because Haskell is lazy, we can do similar thing this way take 13 [13,26..].
+Ranges are used to make lists composed of elements that can be enumerated, e.g. [1..20] is a list that contains elements from 1 to 20. We can also specify a step between items in the range, e.g. [2,4..11] is [2,4,6,8,10]. Ranges can also be used to create a decreasing list e.g. [9,6..1] is [9,6,3]. We can also use it to create a infinite list by not specifying an upper limit, e.g. [13,26..24*13] which creates a list containing the first 24 multiplies of 13. Because Haskell is lazy, we can do similar thing this way take 13 [13,26..]. Range notation gives us a closed interval; the list contains both endpoints.
 
 "cycle" takes a list and replicates its elements indefinitely to form an inifinite list. If you try to display the result, it will go on forever, so make sure to slice it off somewhere, e.g. take 7(cycle [1,2,3]) is [1,2,3,1,2,3,1].
 
@@ -211,16 +216,34 @@ Pairs are tuples that consist of 2 elements. "fst" returns first component of a 
 
 
 
+GHC
+---
 
-
+Has 3 main components:
+- ghc: compiler
+- ghci: REPL
+- runghc: for running Haskell programs scripts, without needing to compile them first
 
 
 GHCI
 ----
 
+Prelude is a standard library of useful functions.
+
 Set prompt :set prompt "ghci> ".
+Set ghci to display expression's type :set +t.
+
+Use :unset to revert things that were set using :set.
 
 ":t <expression>" to examine the type of some expression, e.g. :t "Hello" is "hello" :: [Char], :t 4 == 5 is 4 == 5 :: Bool.
+
+":?" prints long help message.
+
+":module + <module name>" to load definitions from other modules.
+
+":info <operator>" to inspect the operator's precedence level.
+
+":show bindings" lists all user-defined variables in GHCI.
 
 
 
