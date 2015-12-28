@@ -7,3 +7,20 @@ toDigitsRev 0
 toDigitsRev (-1)
 toDigitsRev 1234
 
+doubleEveryOther []
+doubleEveryOther [1]
+doubleEveryOther [1,2]
+doubleEveryOther [1,2,3]
+doubleEveryOther [8,7,6,5] == [16,7,12,5]
+doubleEveryOther [1,2,3] == [1,4,3]
+
+sumDigits []
+sumDigits [16,7,12,5] == 22
+
+ 
+validate 4012888888881881 == True
+validate 4012888888881882 == False
+
+
+
+
