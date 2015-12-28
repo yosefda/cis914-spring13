@@ -1,0 +1,9 @@
+-- Haskell Playground 1.0
+toDigits 0
+toDigits (-1)
+toDigits 1234
+
+toDigitsRev 0
+toDigitsRev (-1)
+toDigitsRev 1234
+
