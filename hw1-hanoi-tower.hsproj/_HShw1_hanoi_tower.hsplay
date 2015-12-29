@@ -1,0 +1,6 @@
+-- Haskell Playground 1.0
+hanoi 0 "a" "b" "c"
+hanoi 1 "a" "b" "c"
+hanoi 2 "a" "b" "c"
+hanoi 3 "a" "b" "c"
+hanoi 4 "a" "b" "c"
